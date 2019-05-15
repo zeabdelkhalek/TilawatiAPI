@@ -1,31 +1,37 @@
-# Adonis fullstack application
 
-This is the fullstack boilerplate for AdonisJs, it comes pre-configured with.
-
-1. Bodyparser
-2. Session
-3. Authentication
-4. Web security middleware
-5. CORS
-6. Edge template engine
-7. Lucid ORM
-8. Migrations and seeds
+# Tlawati API 
 
 ## Setup
 
-Use the adonis command to install the blueprint
+Clone the repo 
 
 ```bash
-adonis new yardstick
+git clone https://github.com/AdelNamani/TilawatiAPI
+cd TilawatiAPI
 ```
 
-or manually clone the repo and then run `npm install`.
+Install dependencies 
 
+```bash
+npm i 
+```
 
-### Migrations
+Create your .env file 
 
-Run the following command to run startup migrations.
+```bash
+cp .env.example .env
+```
+
+Configure your env with your database informations .
+
+Run startup migrations.
 
 ```js
 adonis migration:run
+```
+
+Run the application 
+
+```js
+adonis serve --dev 
 ```
