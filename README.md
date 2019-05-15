@@ -30,6 +30,12 @@ Run startup migrations.
 adonis migration:run
 ```
 
+Generate app key 
+
+```js
+adonis key:generate
+```
+
 Run the application 
 
 ```js
