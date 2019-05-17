@@ -5,7 +5,7 @@
   "description": "The fullstack application boilerplate for Adonisjs",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "adonis serve",
     "test": "node ace test"
   },
   "keywords": [
@@ -32,5 +32,8 @@
   "devDependencies": {},
   "autoload": {
     "App": "./app"
+  } ,
+  "engines": {
+    "node": "10.15.0"
   }
 }
