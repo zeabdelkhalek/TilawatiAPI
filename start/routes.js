@@ -17,7 +17,9 @@
 const Route = use('Route')
 
 Route.post('/api/register' , 'UserController.register')
-
 Route.post('/api/login' , 'UserController.login')
+Route.put('/api/users/update/profile', 'UserController.update')
+Route.put('/api/users/update/password', 'UserController.updatePassword')
 
+Route.post('/api/tilawas/add', 'TilawaController.add')
 
