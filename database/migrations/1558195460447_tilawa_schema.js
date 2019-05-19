@@ -10,8 +10,8 @@ class TilawaSchema extends Schema {
       table.string('record').notNullable().unique()
       table.string('title').notNullable().unique()
       table.string('description')
-      table.integer('user_id').unsigned().references('id').inTable('users').notNullable()
-      table.integer('surah_id').unsigned().references('id').inTable('surahs').notNullable()
+      //table.integer('user_id').unsigned().references('id').inTable('users').notNullable()
+      //table.integer('surah_id').unsigned().references('id').inTable('surahs').notNullable()
       table.timestamps()
     })
   }

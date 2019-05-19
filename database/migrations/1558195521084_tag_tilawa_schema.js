@@ -5,10 +5,10 @@ const Schema = use('Schema')
 
 class TagTilawaSchema extends Schema {
   up () {
-    this.create('tag_tilawas', (table) => {
+    this.create('tag_tilawa', (table) => {
       table.increments()
-      table.integer('tilawa_id').unsigned().references('id').inTable('users').notNullable()
-      table.integer('tag_id').unsigned().references('id').inTable('users').notNullable()
+      //table.integer('tilawa_id').unsigned().references('id').inTable('users').notNullable()
+      //table.integer('tag_id').unsigned().references('id').inTable('users').notNullable()
       table.timestamps()
     })
   }
