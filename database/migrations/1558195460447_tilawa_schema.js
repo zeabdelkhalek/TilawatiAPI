@@ -7,8 +7,8 @@ class TilawaSchema extends Schema {
   up () {
     this.create('tilawas', (table) => {
       table.increments()
-      table.string('record').notNullable().unique()
-      table.string('title').notNullable().unique()
+      table.string('record').notNullable()
+      table.string('title').notNullable()
       table.string('description')
       //table.integer('user_id').unsigned().references('id').inTable('users').notNullable()
       //table.integer('surah_id').unsigned().references('id').inTable('surahs').notNullable()

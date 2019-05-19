@@ -123,10 +123,8 @@ class UserController {
         })
 
         try {
-            //const password = request.input('new_password')
             // hash and save new password
-            user.password = request.input('new_password') 
-            //await Hash.make(password)
+            user.password = request.input('new_password')
             await user.save()
 
             console.log(user.password);

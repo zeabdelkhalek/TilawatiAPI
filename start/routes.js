@@ -22,4 +22,6 @@ Route.put('/api/users/update/profile', 'UserController.update')
 Route.put('/api/users/update/password', 'UserController.updatePassword')
 
 Route.post('/api/tilawas/add', 'TilawaController.add')
+Route.put('/api/tilawas/update/:id', 'TilawaController.update')
+Route.delete('/api/tilawas/delete/:id', 'TilawaController.delete')
 
