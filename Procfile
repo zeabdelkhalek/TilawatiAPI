@@ -1,2 +1,2 @@
-release: node ace migration:run — force
+release: node ace migration:run --force
 web: npm start
