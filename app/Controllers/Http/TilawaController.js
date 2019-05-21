@@ -11,7 +11,6 @@ const { validate } = use('Validator')
 class TilawaController {
     async add({ auth, request, response }) {
         const validation = await validate(request.all(), {
-            record: 'min:3|max:50',
             title: 'min:3|max:50',
             description: 'min:20|max:500'
         })
@@ -26,19 +25,18 @@ class TilawaController {
             const user = await auth.user
 
             //console.log(user)
-
+            
             /*let surah = new Surah()
             surah.name = 'Al_Nisaa'
             await surah.save()*/
 
-            const record = request.file('record', {
-                types: ['audio']
-            })
             //console.log(record)
-            tilawa.record = new Date().getTime() + '.' + record.subtype
-            await record.move(Helpers.publicPath('upload/post'), {
-                name: tilawa.record
-            })
+            
+            
+            console.log("tttttttttttttttttttttttttttttttttttttttttttttttttttttttttt")
+
+
+            //console.log(Helpers.publicPath());
 
             // get new data entered
             //tilawa.record = request.input('record')
@@ -47,6 +45,15 @@ class TilawaController {
             tilawa.surah_id = request.input('surah')
             tilawa.user_id = user.id
 
+            const record = request.file('record', {
+                types: ['audio']
+            })
+
+            tilawa.record = tilawa.title + '.' + record.subtype
+            await record.move(Helpers.publicPath('upload/post'), {
+                name: tilawa.record
+            })
+            
             if (!record.moved()) {
                 return profilePic.error()
             }
@@ -87,19 +94,17 @@ class TilawaController {
 
             if (user.id === tilawa.user_id) {
                 // update with new data entered
+                tilawa.title = request.input('title')
+                tilawa.description = request.input('description')
+                tilawa.user_id = user.id
                 const record = request.file('record', {
                     types: ['audio']
                 })
                 //console.log(record)
-                tilawa.record = new Date().getTime() + '.' + record.subtype
+                tilawa.record = tilawa.title + '.' + record.subtype
                 await record.move(Helpers.publicPath('upload/post'), {
                     name: tilawa.record
                 })
-                tilawa.title = request.input('title')
-                tilawa.description = request.input('description')
-                //tilawa.surah_id = request.input('surah')
-                tilawa.user_id = user.id
-                //user.password = request.input('password')
 
                 if (!record.moved()) {
                     return profilePic.error()
@@ -134,13 +139,12 @@ class TilawaController {
             const user = await auth.user
 
             if (user.id === tilawa.user_id) {
-                //console.log('/public/upload/post/' + tilawa.record)
-                const file = './public/upload/post/' + tilawa.record;
+                /*const file = Helpers.publicPath(tilawa.record)
                 console.log(file)
-                const exists = await Drive.exists(tilawa.record)
+                const exists = await Drive.exists('../public/'+tilawa.record)
                 console.log(exists)
-                await Drive.delete(file)
-                /*await tilawa.delete();*/
+                await Drive.delete(file)*/
+                await tilawa.delete();
                 return response.json({
                     status: 'success',
                     message: 'Tilawa deleted!',
