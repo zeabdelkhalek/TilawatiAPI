@@ -51,7 +51,7 @@ class UserController {
                 let accessToken = await auth.generate(user)
                 return response.status(200).json({
                     'user': user,
-                    'access_token': accessToken
+                    'accessToken': accessToken
                 })
             }
         }
