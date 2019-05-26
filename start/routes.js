@@ -15,6 +15,7 @@
 
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
+const Helpers = use('Helpers')
 
 //USER ROUTES
 Route.post('/api/register' , 'UserController.register')
@@ -25,6 +26,7 @@ Route.put('/api/users/update/password', 'UserController.updatePassword')
 Route.post('/api/tilawas/add', 'TilawaController.add')
 Route.put('/api/tilawas/update/:id', 'TilawaController.update')
 Route.delete('/api/tilawas/delete/:id', 'TilawaController.delete')
+Route.get('/api/tilawas/get/:id', 'TilawaController.get')
 //COMMENT ROUTES
 Route.post('/api/tilawas/:id/comments/add', 'CommentController.add')
 Route.put('/api/tilawas/:id/comments/:comment_id/update', 'CommentController.update')

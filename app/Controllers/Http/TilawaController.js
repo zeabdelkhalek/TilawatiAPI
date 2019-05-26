@@ -42,7 +42,6 @@ class TilawaController {
             if (!record.moved()) {
                 return record.error()
             }
-
             await tilawa.save()
 
             return response.status(200).json({
@@ -131,6 +130,27 @@ class TilawaController {
                 message: 'There was a problem deleting tilawa.'
             })
         }
+    }
+
+    async get ({response, params}) {
+        try {
+            const tilawa = await Tilawa.find(params.id)
+
+            return response.json({
+                status: 'success',
+                message: 'Tilawa checked!',
+                data: tilawa
+            })
+        } catch (error) {
+            console.log(error)
+            return response.status(400).json({
+                status: 'error',
+                message: 'There was a problem checking tilawa.'
+            })
+        }
+        // To get the file path use Helpers.tmpPath(`uploads/tilawas/${tilawa.record}`)
+        /*console.log(Helpers.tmpPath(`uploads/tilawas/${params.file}`))
+        return response.download(Helpers.tmpPath(`uploads/tilawas/${params.file}`))*/
     }
 }
 
