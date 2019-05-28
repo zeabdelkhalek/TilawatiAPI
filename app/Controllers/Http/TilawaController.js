@@ -168,6 +168,15 @@ class TilawaController {
             data : tilawas
         })
     }
+
+    async searchBySurah({request , response}){
+        const id = request.input('surah_id')
+        const tilawas = await Database.table('tilawas').where('surah_id','=',id)
+        return response.json({
+            data : tilawas
+        })
+    }
+    
 }
 
 module.exports = TilawaController
