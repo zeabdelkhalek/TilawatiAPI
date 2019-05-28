@@ -2,6 +2,7 @@
 const Hash = use('Hash')
 const User = use('App/Models/User')
 const { validate } = use('Validator')
+const Database = use('Database')
 
 class UserController {
     async register({ request, auth, response }) {
@@ -139,6 +140,16 @@ class UserController {
                 message: 'There was a problem updating profile, please try again later.'
             })
         }
+    }
+
+    async search({ request, response }) {
+        const query = request.input('q')
+        const users1 = await Database.table('users').where('first_name', 'like', `%${query}%`)
+        const users2 = await Database.table('users').where('last_name', 'like', `%${query}%`)
+        const users = [...users1,...users2]
+        return response.json({
+            data: users
+        })
     }
 }
 

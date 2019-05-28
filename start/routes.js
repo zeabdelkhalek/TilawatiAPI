@@ -22,6 +22,7 @@ Route.post('/api/register' , 'UserController.register')
 Route.post('/api/login' , 'UserController.login')
 Route.put('/api/users/update/profile', 'UserController.update')
 Route.put('/api/users/update/password', 'UserController.updatePassword')
+Route.get('api/users/search', 'UserController.search')
 //TILAWA ROUTES
 Route.post('/api/tilawas/add', 'TilawaController.add')
 Route.put('/api/tilawas/update/:id', 'TilawaController.update')
