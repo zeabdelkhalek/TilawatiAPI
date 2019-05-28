@@ -8,8 +8,6 @@ class NoteSchema extends Schema {
     this.create('notes', (table) => {
       table.increments()
       table.integer('star').nullable()
-      //table.integer('user_id').unsigned().references('id').inTable('users').notNullable()  
-      //table.integer('tilawa_id').unsigned().references('id').inTable('users').notNullable()
       table.timestamps()
     })
   }

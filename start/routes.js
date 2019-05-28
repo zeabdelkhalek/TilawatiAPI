@@ -33,3 +33,5 @@ Route.get('/api/tilawas/:id/comments/index', 'CommentController.index')
 Route.post('/api/tilawas/:id/comments/add', 'CommentController.add')
 Route.put('/api/tilawas/:id/comments/:comment_id/update', 'CommentController.update')
 Route.delete('/api/tilawas/:id/comments/:comment_id/delete', 'CommentController.delete')
+//NOTE ROUTES
+Route.post('/api/tilawas/:id/notes/add', 'NoteController.add')
