@@ -118,6 +118,29 @@ class CommentController {
             })
         }
     }
+
+    async index({ params, response }) {
+        try {
+            const tilawa = await Tilawa.find(params.id)
+            const comments = await Comment.query()
+                .where('tilawa_id', tilawa.id)
+                .fetch()
+
+            console.log(comments)
+            return response.json({
+                status: 'success',
+                message: 'Comment deleted!',
+                data: comments
+            })
+
+        } catch (error) {
+            console.log(error)
+            return response.status(400).json({
+                status: 'error',
+                message: 'There was a problem finding comments.'
+            })
+        }
+    }
 }
 
 module.exports = CommentController

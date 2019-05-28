@@ -22,9 +22,9 @@ class TilawaController {
         try {
             let tilawa = new Tilawa()
             const user = await auth.user
-            
+
             // get new data entered
-    
+
             tilawa.title = request.input('title')
             tilawa.description = request.input('description')
             tilawa.surah_id = request.input('surah_id')
@@ -38,7 +38,7 @@ class TilawaController {
             await record.move(Helpers.publicPath('uploads/tilawas'), {
                 name: tilawa.record
             })
-            
+
             if (!record.moved()) {
                 return record.error()
             }
@@ -72,7 +72,7 @@ class TilawaController {
 
         try {
             // get currently authenticated user
-            
+
             const user = await auth.user
 
             if (user.id === tilawa.user_id) {
@@ -80,7 +80,7 @@ class TilawaController {
                 tilawa.title = request.input('title')
                 tilawa.description = request.input('description')
                 tilawa.user_id = user.id
-        
+
                 await tilawa.save()
 
                 return response.json({
@@ -132,7 +132,7 @@ class TilawaController {
         }
     }
 
-    async get ({response, params}) {
+    async get({ response, params }) {
         try {
             const tilawa = await Tilawa.find(params.id)
 
@@ -151,6 +151,13 @@ class TilawaController {
         // To get the file path use Helpers.tmpPath(`uploads/tilawas/${tilawa.record}`)
         /*console.log(Helpers.tmpPath(`uploads/tilawas/${params.file}`))
         return response.download(Helpers.tmpPath(`uploads/tilawas/${params.file}`))*/
+    }
+
+    async index ({request, response}) {
+        const tilawas = await Tilawa.all()
+        return response.json ({
+            data: tilawas
+        })
     }
 }
 
