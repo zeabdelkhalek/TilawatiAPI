@@ -6,6 +6,7 @@ const User = use('App/Models/User')
 const Tilawa = use('App/Models/Tilawa')
 const Surah = use('App/Models/Surah')
 const { validate } = use('Validator')
+const Database = use('Database')
 
 
 class TilawaController {
@@ -159,6 +160,23 @@ class TilawaController {
             data: tilawas
         })
     }
+
+    async search({request , response}){
+        const query = request.input('q')
+        const tilawas = await Database.table('tilawas').where('title','like',`%${query}%`)
+        return response.json({
+            data : tilawas
+        })
+    }
+
+    async searchBySurah({request , response}){
+        const id = request.input('surah_id')
+        const tilawas = await Database.table('tilawas').where('surah_id','=',id)
+        return response.json({
+            data : tilawas
+        })
+    }
+    
 }
 
 module.exports = TilawaController
