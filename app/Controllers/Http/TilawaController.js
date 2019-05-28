@@ -6,6 +6,7 @@ const User = use('App/Models/User')
 const Tilawa = use('App/Models/Tilawa')
 const Surah = use('App/Models/Surah')
 const { validate } = use('Validator')
+const Database = use('Database')
 
 
 class TilawaController {
@@ -157,6 +158,14 @@ class TilawaController {
         const tilawas = await Tilawa.all()
         return response.json ({
             data: tilawas
+        })
+    }
+
+    async search({request , response}){
+        const query = request.input('q')
+        const tilawas = await Database.table('tilawas').where('title','like',`%${query}%`)
+        return response.json({
+            data : tilawas
         })
     }
 }
