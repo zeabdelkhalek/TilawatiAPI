@@ -24,6 +24,10 @@ class TilawaController {
             let tilawa = new Tilawa()
             const user = await auth.user
 
+            /*let surah = new Surah()
+            surah.name = "Fatiha"
+            await surah.save()*/
+
             // get new data entered
 
             tilawa.title = request.input('title')

@@ -17,12 +17,12 @@ class DefineForeginKeysSchema extends Schema {
 
     this.table('notes',(table)=>{
       table.integer('user_id').unsigned().references('id').inTable('users').notNullable()
-      table.integer('tilawa_id').unsigned().references('id').inTable('users').notNullable()
+      table.integer('tilawa_id').unsigned().references('id').inTable('tilawas').notNullable()
     })
 
     this.table('tag_tilawa',(table) => {
       table.integer('tilawa_id').unsigned().references('id').inTable('users').notNullable()
-      table.integer('tag_id').unsigned().references('id').inTable('users').notNullable()
+      table.integer('tag_id').unsigned().references('id').inTable('tags').notNullable()
     })
   }
 

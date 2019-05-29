@@ -13,25 +13,45 @@ class NoteController {
             const user = await auth.user
             let note = new Note()
 
-            console.log(user.id)
-            console.log(tilawa.id)
-
             note.star = 1
-            note.user_id = user.id
-            console.log(note.user_id)
             note.tilawa_id = tilawa.id
-            console.log(note.tilawa_id)
-
-            console.log(note)
-
+            note.user_id = user.id
+            
             await note.save()
-            console.log(note)
-
+            
             return response.json({
                 status: 'success',
                 message: 'Note added!',
                 data: note
             })
+        } catch (error) {
+            console.log(error)
+            return response.status(400).json({
+                status: 'error',
+                message: 'There was a problem adding Note.'
+            })
+        }
+    }
+
+    async delete ({response, auth, params}) {
+        try {
+            const tilawa = await Tilawa.find(params.id)
+            const user = await auth.user
+            const note = await Note.find(params.note_id)
+
+            if (user.id === note.user_id) {
+                await note.delete();
+                return response.json({
+                    status: 'success',
+                    message: 'Note removed!',
+                    data: tilawa
+                })
+            } else {
+                return response.status(400).json({
+                    status: 'error',
+                    message: "You don't have permission to delete this comment."
+                })
+            }
         } catch (error) {
             console.log(error)
             return response.status(400).json({
