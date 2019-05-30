@@ -6,6 +6,7 @@ const User = use('App/Models/User')
 const Tilawa = use('App/Models/Tilawa')
 const Surah = use('App/Models/Surah')
 const { validate } = use('Validator')
+const Database = use('Database')
 
 
 class TilawaController {
@@ -22,9 +23,13 @@ class TilawaController {
         try {
             let tilawa = new Tilawa()
             const user = await auth.user
-            
+
+            /*let surah = new Surah()
+            surah.name = "Fatiha"
+            await surah.save()*/
+
             // get new data entered
-    
+
             tilawa.title = request.input('title')
             tilawa.description = request.input('description')
             tilawa.surah_id = request.input('surah_id')
@@ -38,7 +43,7 @@ class TilawaController {
             await record.move(Helpers.publicPath('uploads/tilawas'), {
                 name: tilawa.record
             })
-            
+
             if (!record.moved()) {
                 return record.error()
             }
@@ -72,7 +77,7 @@ class TilawaController {
 
         try {
             // get currently authenticated user
-            
+
             const user = await auth.user
 
             if (user.id === tilawa.user_id) {
@@ -80,7 +85,7 @@ class TilawaController {
                 tilawa.title = request.input('title')
                 tilawa.description = request.input('description')
                 tilawa.user_id = user.id
-        
+
                 await tilawa.save()
 
                 return response.json({
@@ -132,7 +137,7 @@ class TilawaController {
         }
     }
 
-    async get ({response, params}) {
+    async get({ response, params }) {
         try {
             const tilawa = await Tilawa.find(params.id)
 
@@ -152,6 +157,36 @@ class TilawaController {
         /*console.log(Helpers.tmpPath(`uploads/tilawas/${params.file}`))
         return response.download(Helpers.tmpPath(`uploads/tilawas/${params.file}`))*/
     }
+
+    async index ({request, response}) {
+        let tilawas = await Tilawa
+            .query()
+            .with('comments')
+            .with('user')
+            .with('likes')
+            .with('tags')
+            .fetch()
+        return response.json ({
+            data: tilawas
+        })
+    }
+
+    async search({request , response}){
+        const query = request.input('q')
+        const tilawas = await Database.table('tilawas').where('title','like',`%${query}%`)
+        return response.json({
+            data : tilawas
+        })
+    }
+
+    async searchBySurah({request , response}){
+        const id = request.input('surah_id')
+        const tilawas = await Database.table('tilawas').where('surah_id','=',id)
+        return response.json({
+            data : tilawas
+        })
+    }
+    
 }
 
 module.exports = TilawaController
