@@ -9,7 +9,7 @@
 
 ```bash
 git clone https://github.com/AbdelkhalekESI/TilawatiAPI 
-cd LaraHack 
+cd TilawatiAPI 
 ```
 
  2 - Build the app image and run the services:
