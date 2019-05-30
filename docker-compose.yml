@@ -2,27 +2,37 @@ version : '3.6'
 services : 
   tilawati-api : 
     build : ./ 
+    # entrypoint : /tmp/run.sh
     command : adonis serve --dev
     working_dir : /usr/src/tilawati
     environment : 
+      - HOST=0.0.0.0
+      - PORT=3333
       - DATABASE = tilawati
       - DB_HOST = mysql
       - DB_USER = root
-      - DB_PORT = 3306
+      - DB_PORT = 3307
       - DB_PASSWORD = abdelkhalek
-    links : 
+      - NODE_ENV=development
+    depends_on : 
       - mysql
     ports : 
       - "3333:3333"
     volumes : 
       - ./:/usr/src/tilawati 
       - /usr/src/tilawati/node_modules/
+    networks:
+      - api_db 
   mysql :
     image : mysql
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci','--default-authentication-plugin=mysql_native_password']
     environment : 
       MYSQL_ROOT_PASSWORD: abdelkhalek
-      MYSQL_DATABASE: 'tilawati'
+      MYSQL_DATABASE: tilawati
     ports : 
       - "3307:3306"
-    expose : 
-      - '3306'
+    networks:
+      - api_db 
+networks:
+  api_db :
+    driver: bridge

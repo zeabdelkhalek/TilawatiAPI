@@ -11,6 +11,4 @@ RUN npm install
 
 COPY ./ ./
 
-EXPOSE 3333
-
-CMD ["/bin/bash"]
+CMD ["./run.sh"]
