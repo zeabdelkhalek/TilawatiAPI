@@ -159,7 +159,13 @@ class TilawaController {
     }
 
     async index ({request, response}) {
-        const tilawas = await Tilawa.all()
+        let tilawas = await Tilawa
+            .query()
+            .with('comments')
+            .with('user')
+            .with('likes')
+            .with('tags')
+            .fetch()
         return response.json ({
             data: tilawas
         })
