@@ -1,7 +1,24 @@
 
 # Tlawati API 
 
-## Setup
+## Deploy Using Docker 
+
+ Getting a local instance of this API up and running is very quickly using docker-compose
+
+ 1 - Clone the repository and cd to the project folder:
+
+```bash
+git clone https://github.com/AbdelkhalekESI/TilawatiAPI 
+cd LaraHack 
+```
+
+ 2 - Build the app image and run the services:
+
+```bash
+docker-compose up --build 
+```
+
+## Setup Locally 
 
 Clone the repo 
 
