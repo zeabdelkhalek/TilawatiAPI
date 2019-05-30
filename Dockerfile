@@ -9,6 +9,8 @@ RUN npm --global config set user root && \
     
 RUN npm install
 
-COPY ./ ./
+COPY ./ ./ 
 
-CMD ["./run.sh"]
+EXPOSE 3333
+
+ENTRYPOINT ["sh" , "./run.sh"]

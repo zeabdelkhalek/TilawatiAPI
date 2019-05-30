@@ -1,3 +1,3 @@
 adonis key:generate
-adonis migrate 
+adonis migration:run
 adonis serve --dev
