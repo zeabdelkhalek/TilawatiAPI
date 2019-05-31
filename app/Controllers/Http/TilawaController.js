@@ -7,6 +7,7 @@ const Tilawa = use('App/Models/Tilawa')
 const Surah = use('App/Models/Surah')
 const { validate } = use('Validator')
 const Database = use('Database')
+const Env = use('Env')
 
 
 class TilawaController {
@@ -166,6 +167,10 @@ class TilawaController {
             .with('likes')
             .with('tags')
             .fetch()
+        tilawas = tilawas.toJSON()
+        tilawas.forEach(tilawa => {
+            tilawa.record = Env.get('APP_URL') + '/uploads/tilawas/' + encodeURI(tilawa.record) 
+        });
         return response.json ({
             data: tilawas
         })
