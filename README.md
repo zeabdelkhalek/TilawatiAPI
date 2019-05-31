@@ -23,7 +23,7 @@ docker-compose up --build
 Clone the repo 
 
 ```bash
-git clone https://github.com/AdelNamani/TilawatiAPI
+git clone https://github.com/AbdelkhalekESI/TilawatiAPI
 cd TilawatiAPI
 ```
 
