@@ -1,28 +1,37 @@
+
+
 version : '3.6'
-services : 
-  tilawati-api : 
-    build : ./ 
-    command : adonis serve --dev
+services :
+  tilawati-api :
+    build : ./
+    # entrypoint : /tmp/run.sh
+    # command : adonis serve --dev
     working_dir : /usr/src/tilawati
-    environment : 
-      - DATABASE = tilawati
-      - DB_HOST = mysql
-      - DB_USER = root
-      - DB_PORT = 3306
-      - DB_PASSWORD = abdelkhalek
-    links : 
+    depends_on :
       - mysql
-    ports : 
+    ports :
       - "3333:3333"
-    volumes : 
-      - ./:/usr/src/tilawati 
+    volumes :
+      - ./:/usr/src/tilawati
       - /usr/src/tilawati/node_modules/
+    networks:
+      - api_db
   mysql :
     image : mysql
-    environment : 
+    # entrypoint : mysql -u root -p -e "update user set authentication_string=password(''), plugin='mysql_native_password' where user='root';"
+    restart: always
+    environment :
       MYSQL_ROOT_PASSWORD: abdelkhalek
-      MYSQL_DATABASE: 'tilawati'
-    ports : 
+      MYSQL_DATABASE: tilawati
+    ports :
       - "3307:3306"
-    expose : 
-      - '3306'
+    expose :
+      - "3306"
+    networks:
+      - api_db
+networks:
+  api_db :
+    driver: bridge
+
+
+
