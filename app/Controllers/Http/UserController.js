@@ -1,156 +1,166 @@
-'use strict'
-const Hash = use('Hash')
-const User = use('App/Models/User')
-const { validate } = use('Validator')
-const Database = use('Database')
+'use strict';
+const Hash = use('Hash');
+const User = use('App/Models/User');
+const { validate } = use('Validator');
+const Database = use('Database');
+const Helpers = use('Helpers')
 
 class UserController {
-    async register({ request, auth, response }) {
-        const validation = await validate(request.all(), {
-            first_name: 'required|min:3|max:50',
-            last_name: 'required|min:3|max:50',
-            email: 'required|email|unique:users',
-            password: 'required|min:8|max:50|confirmed'
-        })
+	async register({ request, auth, response }) {
+		const validation = await validate(request.all(), {
+			first_name: 'required|min:3|max:50',
+			last_name: 'required|min:3|max:50',
+			email: 'required|email|unique:users',
+			password: 'required|min:8|max:50|confirmed'
+		});
 
-        if (validation.fails()) {
-            console.log(validation.message);
-            return response.status(403).json(validation.messages())
-        }
+		if (validation.fails()) {
+			console.log(validation.message);
+			return response.status(403).json(validation.messages());
+		}
 
-        let user = new User()
-        user.first_name = request.input('first_name')
-        user.last_name = request.input('last_name')
-        user.email = request.input('email')
-        user.password = request.input('password')
+		let user = new User();
+		user.first_name = request.input('first_name');
+		user.last_name = request.input('last_name');
+		user.email = request.input('email');
+		user.password = request.input('password');
+		const photo = request.file('photo', {
+			types: [ 'image' ]
+		});
 
-        await user.save()
+		user.photo = user.first_name + '.' + photo.extname;
+		await photo.move(Helpers.publicPath('uploads/photos'), {
+			name: user.photo
+		});
 
-        let accessToken = await auth.generate(user)
+		if (!photo.moved()) {
+			return photo.error();
+		}
+		await user.save();
 
-        return response.status(200).json({
-            "user": user,
-            "accessToken": accessToken
-        })
-    }
+		let accessToken = await auth.generate(user);
 
-    async login({ auth, request, response }) {
-        const validation = await validate(request.all(), {
-            email: 'required',
-            password: 'required'
-        })
+		return response.status(200).json({
+			user: user,
+			accessToken: accessToken
+		});
+	}
 
-        if (validation.fails()) {
-            return response.status(403).json(validation.messages())
-        }
+	async login({ auth, request, response }) {
+		const validation = await validate(request.all(), {
+			email: 'required',
+			password: 'required'
+		});
 
-        const email = request.input('email')
-        const password = request.input('password')
-        try {
-            if (await auth.attempt(email, password)) {
-                let user = await User.findBy('email', email)
-                let accessToken = await auth.generate(user)
-                return response.status(200).json({
-                    'user': user,
-                    'accessToken': accessToken
-                })
-            }
-        }
-        catch (e) {
-            return response.status(403).json([{
-                message: 'Email and password does not match with any account !'
-            }])
-        }
-    }
-    async update({ auth, request, response }) {
-        const validation = await validate(request.all(), {
-            first_name: 'min:3|max:50',
-            last_name: 'min:3|max:50',
-            email: 'email|unique:users',
-        })
+		if (validation.fails()) {
+			return response.status(403).json(validation.messages());
+		}
 
-        if (validation.fails()) {
-            console.log(validation.message);
-            return response.status(403).json(validation.messages())
-        }
+		const email = request.input('email');
+		const password = request.input('password');
+		try {
+			if (await auth.attempt(email, password)) {
+				let user = await User.findBy('email', email);
+				let accessToken = await auth.generate(user);
+				return response.status(200).json({
+					user: user,
+					accessToken: accessToken
+				});
+			}
+		} catch (e) {
+			return response.status(403).json([
+				{
+					message: 'Email and password does not match with any account !'
+				}
+			]);
+		}
+	}
+	async update({ auth, request, response }) {
+		const validation = await validate(request.all(), {
+			first_name: 'min:3|max:50',
+			last_name: 'min:3|max:50',
+			email: 'email|unique:users'
+		});
 
-        try {
-            // get currently authenticated user
-            //console.log(auth.currentUser)
-            const user = await auth.user
+		if (validation.fails()) {
+			console.log(validation.message);
+			return response.status(403).json(validation.messages());
+		}
 
-            // update with new data entered
-            user.first_name = request.input('first_name')
-            user.last_name = request.input('last_name')
-            user.email = request.input('email')
-            //user.password = request.input('password')
+		try {
+			// get currently authenticated user
+			//console.log(auth.currentUser)
+			const user = await auth.user;
 
-            await user.save()
+			// update with new data entered
+			user.first_name = request.input('first_name');
+			user.last_name = request.input('last_name');
+			user.email = request.input('email');
+			//user.password = request.input('password')
 
-            return response.json({
-                status: 'success',
-                message: 'Profile updated!',
-                data: user
-            })
-        } catch (error) {
-            console.log(error)
-            return response.status(400).json({
-                status: 'error',
-                message: 'There was a problem updating profile, please try again later.'
-            })
-        }
-    }
+			await user.save();
 
-    async updatePassword({ auth, request, response }) {
-        // get currently authenticated user
-        const user = await auth.user
+			return response.json({
+				status: 'success',
+				message: 'Profile updated!',
+				data: user
+			});
+		} catch (error) {
+			console.log(error);
+			return response.status(400).json({
+				status: 'error',
+				message: 'There was a problem updating profile, please try again later.'
+			});
+		}
+	}
 
-        // verify if current password matches
-        const verifyPassword = await Hash.verify(
-            request.input('password'),
-            user.password
-        )
+	async updatePassword({ auth, request, response }) {
+		// get currently authenticated user
+		const user = await auth.user;
 
-        // display appropriate message
-        if (!verifyPassword) {
-            return response.status(400).json({
-                status: 'error',
-                message: 'Current password could not be verified! Please try again.'
-            })
-        }
+		// verify if current password matches
+		const verifyPassword = await Hash.verify(request.input('password'), user.password);
 
-        const validation = await validate(request.all(), {
-            password: 'required|min:8|max:50|confirmed'
-        })
+		// display appropriate message
+		if (!verifyPassword) {
+			return response.status(400).json({
+				status: 'error',
+				message: 'Current password could not be verified! Please try again.'
+			});
+		}
 
-        try {
-            // hash and save new password
-            user.password = request.input('new_password')
-            await user.save()
+		const validation = await validate(request.all(), {
+			password: 'required|min:8|max:50|confirmed'
+		});
 
-            console.log(user.password);
+		try {
+			// hash and save new password
+			user.password = request.input('new_password');
+			await user.save();
 
-            return response.json({
-                status: 'success',
-                message: 'Password updated!'
-            })
-        } catch (error) {
-            return response.status(400).json({
-                status: 'error',
-                message: 'There was a problem updating profile, please try again later.'
-            })
-        }
-    }
+			console.log(user.password);
 
-    async search({ request, response }) {
-        const query = request.input('q')
-        const users1 = await Database.table('users').where('first_name', 'like', `%${query}%`)
-        const users2 = await Database.table('users').where('last_name', 'like', `%${query}%`)
-        const users = [...users1,...users2]
-        return response.json({
-            data: users
-        })
-    }
+			return response.json({
+				status: 'success',
+				message: 'Password updated!'
+			});
+		} catch (error) {
+			return response.status(400).json({
+				status: 'error',
+				message: 'There was a problem updating profile, please try again later.'
+			});
+		}
+	}
+
+	async search({ request, response }) {
+		const query = request.input('q');
+		const users1 = await Database.table('users').where('first_name', 'like', `%${query}%`);
+		const users2 = await Database.table('users').where('last_name', 'like', `%${query}%`);
+		const users = [ ...users1, ...users2 ];
+		return response.json({
+			data: users
+		});
+	}
 }
 
-module.exports = UserController
+module.exports = UserController;

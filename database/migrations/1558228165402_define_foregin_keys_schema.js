@@ -20,7 +20,7 @@ class DefineForeginKeysSchema extends Schema {
       table.integer('tilawa_id').unsigned().references('id').inTable('tilawas').notNullable()
     })
 
-    this.table('tag_tilawa',(table) => {
+    this.table('tag_tilawas',(table) => {
       table.integer('tilawa_id').unsigned().references('id').inTable('users').notNullable()
       table.integer('tag_id').unsigned().references('id').inTable('tags').notNullable()
     })
