@@ -167,7 +167,7 @@ class UserController {
 		const user = await auth.user;
 		if (!user) return response.status(404);
 		user.photo = Env.get('APP_URL') + '/uploads/tilawas/' + encodeURI(user.photo);
-		user.name = user.first_name + user.last_name;
+		user.name = user.first_name + ' ' + user.last_name;
 		return response.json({
 			data: user
 		});
