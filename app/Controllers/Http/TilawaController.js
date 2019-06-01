@@ -163,10 +163,11 @@ class TilawaController {
 		tilawas = tilawas.toJSON();
 		tilawas.forEach((tilawa) => {
 			tilawa.record = Env.get('APP_URL') + '/uploads/tilawas/' + encodeURI(tilawa.record);
-            tilawa.user.photo = Env.get('APP_URL') + '/uploads/photos/' + encodeURI(tilawa.user.photo);
-            tilawa.comments.forEach((comment) => {
-                comment.author = comment.user.first_name + comment.user.last_name ; 
-            })
+			tilawa.user.photo = Env.get('APP_URL') + '/uploads/photos/' + encodeURI(tilawa.user.photo);
+			tilawa.comments.forEach((comment) => {
+				comment.author = comment.user.first_name + ' ' + comment.user.last_name;
+				comment.user.photo = Env.get('APP_URL') + '/uploads/photos/' + encodeURI(comment.user.photo)
+			});
 		});
 		return response.json({
 			data: tilawas

@@ -3,7 +3,8 @@ const Hash = use('Hash');
 const User = use('App/Models/User');
 const { validate } = use('Validator');
 const Database = use('Database');
-const Helpers = use('Helpers')
+const Helpers = use('Helpers');
+const Env = use('Env');
 
 class UserController {
 	async register({ request, auth, response }) {
@@ -159,6 +160,16 @@ class UserController {
 		const users = [ ...users1, ...users2 ];
 		return response.json({
 			data: users
+		});
+	}
+
+	async getAuthUser({ auth, request, response }) {
+		const user = await auth.user;
+		if (!user) return response.status(404);
+		user.photo = Env.get('APP_URL') + '/uploads/photos/' + encodeURI(user.photo);
+		user.name = user.first_name + ' ' + user.last_name;
+		return response.json({
+			data: user
 		});
 	}
 }

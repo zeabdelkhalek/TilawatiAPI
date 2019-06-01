@@ -47,4 +47,5 @@ Route.group(() => {
 	// AUTH ROUTES
 	Route.post('register', 'UserController.register');
 	Route.post('login', 'UserController.login');
+	Route.get('auth', 'UserController.getAuthUser');
 }).prefix('api');
